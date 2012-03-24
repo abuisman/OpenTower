@@ -4,10 +4,12 @@ jQuery(document).ready ->
   Crafty.background("#000");
 
   # Load components
-  Crafty.c 'Turret',
-    Turret: (turretType = 'firefox', gridX, gridY) ->
-      # setup animations
-      this.requires("SpriteAnimation, Collision, Grid")
+  Crafty.c 'Enemy',
+    _xspeed: 3,
+    _yspeed: 2,
+    init: ->
+    doeNep: ->
+       console.log('hoi')
 
   #turn the sprite map into usable components
   Crafty.sprite 32, "img/firefox.png",
@@ -23,24 +25,18 @@ jQuery(document).ready ->
                 .attr({ x: 20 * 32, y: 10 * 32, z:1 })
                 
     Crafty.e("2D, DOM, firefoxTurret")
-                .attr({ x: 10 * 32, y: 20 * 32, z:1 })
+                .attr({ x: 9 * 32, y: 12 * 32, z:1 })
                                           
-    window.enemy= Crafty.e("2D, DOM, ie_enemy")
+    window.enemy= Crafty.e("2D, DOM, ie_enemy, Enemy")
                 .attr({ x: 2 * 16, y: 3 * 16, z:1 })
-                .bind "enterframe", ->
-                    this.rotation += rotation;
-                    this.y -= this._yspeed;
-                    this.x += this._xspeed;
-                     
-                    if(this._y > Crafty.viewport.height)
-                        this.destroy();
-                        if(!this.hit) 
-                            score -= (index+1) * 10;
-                            scoreEnt.text("Score: "+score); 
 
-                
+
+                                
   Crafty.scene('main')
 
   PlaceTurrent = (type, x, y) ->
     Crafty.e("2D, DOM, firefoxTurret")
       .attr({ x: 20 * 16, y: 10 * 16, z:1 })
+
+  Crafty.bind 'EnterFrame', ->
+      window.enemy.doeNep()

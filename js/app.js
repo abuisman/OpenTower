@@ -4,10 +4,12 @@
     var PlaceTurrent;
     Crafty.init('940', '400');
     Crafty.background("#000");
-    Crafty.c('Turret', {
-      Turret: function(turretType, gridX, gridY) {
-        if (turretType == null) turretType = 'firefox';
-        return this.requires("SpriteAnimation, Collision, Grid");
+    Crafty.c('Enemy', {
+      _xspeed: 3,
+      _yspeed: 2,
+      init: function() {},
+      doeNep: function() {
+        return console.log('hoi');
       }
     });
     Crafty.sprite(32, "img/firefox.png", {
@@ -23,35 +25,27 @@
         z: 1
       });
       Crafty.e("2D, DOM, firefoxTurret").attr({
-        x: 10 * 32,
-        y: 20 * 32,
+        x: 9 * 32,
+        y: 12 * 32,
         z: 1
       });
-      return window.enemy = Crafty.e("2D, DOM, ie_enemy").attr({
+      return window.enemy = Crafty.e("2D, DOM, ie_enemy, Enemy").attr({
         x: 2 * 16,
         y: 3 * 16,
         z: 1
-      }).bind("enterframe", function() {
-        this.rotation += rotation;
-        this.y -= this._yspeed;
-        this.x += this._xspeed;
-        if (this._y > Crafty.viewport.height) {
-          this.destroy();
-          if (!this.hit) {
-            score -= (index + 1) * 10;
-            return scoreEnt.text("Score: " + score);
-          }
-        }
       });
     });
     Crafty.scene('main');
-    return PlaceTurrent = function(type, x, y) {
+    PlaceTurrent = function(type, x, y) {
       return Crafty.e("2D, DOM, firefoxTurret").attr({
         x: 20 * 16,
         y: 10 * 16,
         z: 1
       });
     };
+    return Crafty.bind('EnterFrame', function() {
+      return window.enemy.doeNep();
+    });
   });
 
 }).call(this);
