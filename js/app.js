@@ -66,35 +66,50 @@
       }
     });
     Crafty.c('Enemy', {
-      _movespeed: 1,
+      _movespeed: 6,
       _health: 100,
       _reward: 1,
       _direction: 'east',
+      _waypoint: 0,
       init: function() {
         return this.bind('EnterFrame', this.doMove);
       },
       doMove: function() {
-        switch (this._direction) {
-          case 'north':
-            this.y = this.y - this._movespeed;
-            break;
-          case 'east':
-            this.x = this.x + this._movespeed;
-            break;
-          case 'south':
-            this.y = this.y + this._movespeed;
-            break;
-          case 'west':
-            this.x = this.x - this._movespeed;
-        }
-        return this.determineDirection();
-      },
-      determineDirection: function() {
-        var enemy;
+        var change_waypoint_x_wise, change_waypoint_y_wise, enemy, movedir_x, movedir_y, next_wp, wp;
         enemy = this;
-        return jQuery.each(MapDirections, function(index, func) {
-          return enemy._direction = (func(enemy.x, enemy.y)) === void 0 ? enemy._direction : func(enemy.x, enemy.y);
-        });
+        wp = Map.waypoints[this._waypoint];
+        next_wp = Map.waypoints[this._waypoint + 1];
+        movedir_x = (next_wp[0] - wp[0]) <= 0 ? 'left' : 'right';
+        movedir_y = (next_wp[1] - wp[1]) <= 0 ? 'up' : 'down';
+        change_waypoint_x_wise = (next_wp[0] - wp[0]) === 0 ? true : false;
+        change_waypoint_y_wise = (next_wp[1] - wp[1]) === 0 ? true : false;
+        if (movedir_x === 'left') {
+          if (enemy.x > next_wp[0]) enemy.x = enemy.x - enemy._movespeed;
+          if ((enemy.x - this._movespeed) <= next_wp[0]) {
+            change_waypoint_x_wise = true;
+          }
+        } else {
+          if (enemy.x < next_wp[0]) enemy.x = enemy.x + enemy._movespeed;
+          if ((enemy.x + this._movespeed) >= next_wp[0]) {
+            change_waypoint_x_wise = true;
+          }
+        }
+        if (movedir_y === 'up') {
+          if (enemy.y > next_wp.y) enemy.y = enemy.y - enemy._movespeed;
+          if ((enemy.y - this._movespeed) <= next_wp[1]) {
+            change_waypoint_y_wise = true;
+          }
+        } else {
+          if (enemy.y < next_wp.y) enemy.y = enemy.y + enemy._movespeed;
+          if ((enemy.y + this._movespeed) <= next_wp[1]) {
+            change_waypoint_y_wise = true;
+          }
+        }
+        console.log('x:' + change_waypoint_x_wise + ' to x ' + next_wp[0]);
+        console.log('y:' + change_waypoint_y_wise + ' ti y ' + next_wp[1]);
+        if (change_waypoint_x_wise && change_waypoint_y_wise) {
+          return this._waypoint++;
+        }
       }
     });
     /*

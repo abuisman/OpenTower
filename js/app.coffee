@@ -66,28 +66,53 @@ jQuery(document).ready ->
 
   # Load components
   Crafty.c 'Enemy',
-    _movespeed: 1
+    _movespeed: 6
     _health: 100
     _reward: 1
     _direction: 'east'
+    _waypoint: 0
     init: ->
       @bind 'EnterFrame', this.doMove
     doMove: ->
-      switch @_direction
-        when 'north'
-          this.y = this.y - @_movespeed
-        when 'east'
-          this.x = this.x + @_movespeed
-        when 'south'
-          this.y = this.y + @_movespeed
-        when 'west'
-          this.x = this.x - @_movespeed
-      @determineDirection()
-    determineDirection: -> 
       enemy = this
-      jQuery.each MapDirections, (index, func) ->
-        enemy._direction = if (func(enemy.x, enemy.y)) is undefined then enemy._direction else func(enemy.x, enemy.y)
+      wp = Map.waypoints[@_waypoint]
+      next_wp = Map.waypoints[@_waypoint+1]
 
+      # first determine general direction
+      movedir_x = if (next_wp[0] - wp[0]) <= 0 then 'left' else 'right'
+      movedir_y = if (next_wp[1] - wp[1]) <= 0 then 'up' else 'down'
+      
+      # move accordingly on x-axis
+      change_waypoint_x_wise = if (next_wp[0] - wp[0]) == 0 then true else false;
+      change_waypoint_y_wise = if (next_wp[1] - wp[1]) == 0 then true else false;
+      
+      if movedir_x == 'left'
+          if enemy.x > next_wp[0]
+            enemy.x = enemy.x - enemy._movespeed
+          if (enemy.x - @_movespeed) <= next_wp[0]
+            change_waypoint_x_wise = true
+      else
+          if enemy.x < next_wp[0]
+            enemy.x = enemy.x + enemy._movespeed
+          if (enemy.x + @_movespeed) >= next_wp[0]
+            change_waypoint_x_wise = true
+
+      # move accordingly on y-axis
+      if movedir_y == 'up'
+          if enemy.y > next_wp.y
+            enemy.y = enemy.y - enemy._movespeed
+          if (enemy.y - @_movespeed) <= next_wp[1]
+            change_waypoint_y_wise = true
+      else 
+          if enemy.y < next_wp.y
+            enemy.y = enemy.y + enemy._movespeed
+          if (enemy.y + @_movespeed) <= next_wp[1]
+            change_waypoint_y_wise = true
+      
+      console.log 'x:' +  change_waypoint_x_wise + ' to x ' + next_wp[0]
+      console.log 'y:' + change_waypoint_y_wise + ' ti y ' + next_wp[1]
+      if (change_waypoint_x_wise and change_waypoint_y_wise)
+        @_waypoint++;
   ###
   # Turret!
   ###
