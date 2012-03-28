@@ -72,56 +72,60 @@ jQuery(document).ready ->
     _direction: 'east'
     _waypoint: 0
     init: ->
-      @bind 'EnterFrame', this.doMove
+      @bind 'EnterFrame', @doMove
     doMove: ->
       enemy = this
       wp = Map.waypoints[@_waypoint]
       next_wp = Map.waypoints[@_waypoint+1]
 
-      # first determine general direction
-      movedir_x = next_wp[0] - wp[0]
-      movedir_x = if movedir_x <= 0 then (if movedir_x == 0 then 'none' else 'left') else 'right'
-      
-      # move accordingly on x-axis
-      change_waypoint_x_wise = false
-      if movedir_x == 'left'
-          if enemy.x > next_wp[0]
-            enemy.x = enemy.x - enemy._movespeed
-          if (enemy.x - @_movespeed) <= next_wp[0]
-            change_waypoint_x_wise = true
-      else if movedir_x == 'right'
-          if enemy.x < next_wp[0]
-            enemy.x = enemy.x + enemy._movespeed
-          if (enemy.x + @_movespeed) >= next_wp[0]
-            change_waypoint_x_wise = true
-      else
-        change_waypoint_x_wise = true
+      if next_wp
+       
+        # first determine general direction
+        movedir_x = next_wp[0] - wp[0]
+        movedir_x = if movedir_x <= 0 then (if movedir_x == 0 then 'none' else 'left') else 'right'
+        
+        # move accordingly on x-axis
+        change_waypoint_x_wise = false
+        if movedir_x == 'left'
+            if enemy.x > next_wp[0]
+              enemy.x = enemy.x - enemy._movespeed
+            if (enemy.x - @_movespeed) <= next_wp[0]
+              change_waypoint_x_wise = true
+        else if movedir_x == 'right'
+            if enemy.x < next_wp[0]
+              enemy.x = enemy.x + enemy._movespeed
+            if (enemy.x + @_movespeed) >= next_wp[0]
+              change_waypoint_x_wise = true
+        else
+          change_waypoint_x_wise = true
 
-      #console.log 'x:' +  change_waypoint_x_wise + ' to x ' + next_wp[0]
-      
-      # Checking if moving up or down.
-      movedir_y = next_wp[1] - wp[1]
-      movedir_y = if movedir_y <= 0 then (if movedir_y == 0 then 'none' else 'up') else 'down'
-      
-      # move accordingly on y-axis
-      change_waypoint_y_wise = false
-      # move accordingly on y-axis
-      if movedir_y == 'up'
-          if enemy.y > next_wp.y
-            enemy.y = enemy.y - enemy._movespeed
-          if (enemy.y - @_movespeed) <= next_wp[1]
+        #console.log 'x:' +  change_waypoint_x_wise + ' to x ' + next_wp[0]
+        
+        # Checking if moving up or down.
+        movedir_y = next_wp[1] - wp[1]
+        movedir_y = if movedir_y <= 0 then (if movedir_y == 0 then 'none' else 'up') else 'down'
+        
+        # move accordingly on y-axis
+        change_waypoint_y_wise = false
+        # move accordingly on y-axis
+        if movedir_y == 'up'
+            if enemy.y > next_wp[1]
+              enemy.y = enemy.y - enemy._movespeed
+            if (enemy.y - @_movespeed) <= next_wp[1]
+              change_waypoint_y_wise = true
+        else if movedir_y == 'down'
+            if enemy.y < next_wp[1]
+              enemy.y = enemy.y + enemy._movespeed
+            if (enemy.y + @_movespeed) >= next_wp[1]
+              change_waypoint_y_wise = true
+        else
             change_waypoint_y_wise = true
-      else if movedir_y == 'down'
-          if enemy.y < next_wp.y
-            enemy.y = enemy.y + enemy._movespeed
-          if (enemy.y + @_movespeed) <= next_wp[1]
-            change_waypoint_y_wise = true
-      else
-          change_waypoint_y_wise = true
-      
-      #console.log 'y:' + change_waypoint_y_wise + ' ti y ' + next_wp[1]
-      if (change_waypoint_x_wise and change_waypoint_y_wise)
-        @_waypoint++;
+        
+        #console.log 'y:' + change_waypoint_y_wise + ' ti y ' + next_wp[1]
+        if (change_waypoint_x_wise == true and change_waypoint_y_wise == true)
+          @_waypoint++;
+      else 
+        this.destroy()
   ###
   # Turret!
   ###
@@ -146,20 +150,20 @@ jQuery(document).ready ->
   #the loading screen that will display while our assets load
   Crafty.scene "main", ->
 
-    OpenTower.towers.push (Crafty.e("2D, DOM, firefoxTurret, Turret, WiredHitBox, OpenCollisionable")
+    OpenTower.towers.push (Crafty.e("2D, DOM, firefoxTurret, Turret, OpenCollisionable")
                     .attr({ x: 550, y: 210, z:1, h: 200, w: 200 }))
-    OpenTower.towers.push (Crafty.e("2D, DOM, firefoxTurret, Turret, WiredHitBox, OpenCollisionable")
+    OpenTower.towers.push (Crafty.e("2D, DOM, firefoxTurret, Turret, OpenCollisionable")
                     .attr({ x: 300, y: 210, z:1, h: 200, w: 200 }))
-    OpenTower.towers.push (Crafty.e("2D, DOM, firefoxTurret, Turret, WiredHitBox, OpenCollisionable")
+    OpenTower.towers.push (Crafty.e("2D, DOM, firefoxTurret, Turret, OpenCollisionable")
                     .attr({ x: 20, y: 210, z:1, h: 200, w: 200 }))
 
-    OpenTower.enemies.push(Crafty.e("2D, DOM, ie_enemy, Enemy, WiredHitBox, OpenCollisionable")
+    OpenTower.enemies.push(Crafty.e("2D, DOM, ie_enemy, Enemy, OpenCollisionable")
                 .attr({ x: -1 * 32, y: 0, z:1 }))
-    OpenTower.enemies.push(Crafty.e("2D, DOM, ie_enemy, Enemy, WiredHitBox, OpenCollisionable")
+    OpenTower.enemies.push(Crafty.e("2D, DOM, ie_enemy, Enemy, OpenCollisionable")
                 .attr({ x: -2 * 32, y: 0, z:1 }))
-    OpenTower.enemies.push(Crafty.e("2D, DOM, ie_enemy, Enemy, WiredHitBox, OpenCollisionable")
+    OpenTower.enemies.push(Crafty.e("2D, DOM, ie_enemy, Enemy, OpenCollisionable")
                     .attr({ x: -4 * 32, y: 0, z:1 }))      
-    OpenTower.enemies.push(Crafty.e("2D, DOM, ie_enemy, Enemy, WiredHitBox, OpenCollisionable")
+    OpenTower.enemies.push(Crafty.e("2D, DOM, ie_enemy, Enemy, OpenCollisionable")
                     .attr({ x: -10 * 32, y: 0, z:1 }))      
 
 

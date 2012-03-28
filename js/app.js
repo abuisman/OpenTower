@@ -79,40 +79,44 @@
         enemy = this;
         wp = Map.waypoints[this._waypoint];
         next_wp = Map.waypoints[this._waypoint + 1];
-        movedir_x = next_wp[0] - wp[0];
-        movedir_x = movedir_x <= 0 ? (movedir_x === 0 ? 'none' : 'left') : 'right';
-        change_waypoint_x_wise = false;
-        if (movedir_x === 'left') {
-          if (enemy.x > next_wp[0]) enemy.x = enemy.x - enemy._movespeed;
-          if ((enemy.x - this._movespeed) <= next_wp[0]) {
+        if (next_wp) {
+          movedir_x = next_wp[0] - wp[0];
+          movedir_x = movedir_x <= 0 ? (movedir_x === 0 ? 'none' : 'left') : 'right';
+          change_waypoint_x_wise = false;
+          if (movedir_x === 'left') {
+            if (enemy.x > next_wp[0]) enemy.x = enemy.x - enemy._movespeed;
+            if ((enemy.x - this._movespeed) <= next_wp[0]) {
+              change_waypoint_x_wise = true;
+            }
+          } else if (movedir_x === 'right') {
+            if (enemy.x < next_wp[0]) enemy.x = enemy.x + enemy._movespeed;
+            if ((enemy.x + this._movespeed) >= next_wp[0]) {
+              change_waypoint_x_wise = true;
+            }
+          } else {
             change_waypoint_x_wise = true;
           }
-        } else if (movedir_x === 'right') {
-          if (enemy.x < next_wp[0]) enemy.x = enemy.x + enemy._movespeed;
-          if ((enemy.x + this._movespeed) >= next_wp[0]) {
-            change_waypoint_x_wise = true;
-          }
-        } else {
-          change_waypoint_x_wise = true;
-        }
-        movedir_y = next_wp[1] - wp[1];
-        movedir_y = movedir_y <= 0 ? (movedir_y === 0 ? 'none' : 'up') : 'down';
-        change_waypoint_y_wise = false;
-        if (movedir_y === 'up') {
-          if (enemy.y > next_wp.y) enemy.y = enemy.y - enemy._movespeed;
-          if ((enemy.y - this._movespeed) <= next_wp[1]) {
+          movedir_y = next_wp[1] - wp[1];
+          movedir_y = movedir_y <= 0 ? (movedir_y === 0 ? 'none' : 'up') : 'down';
+          change_waypoint_y_wise = false;
+          if (movedir_y === 'up') {
+            if (enemy.y > next_wp[1]) enemy.y = enemy.y - enemy._movespeed;
+            if ((enemy.y - this._movespeed) <= next_wp[1]) {
+              change_waypoint_y_wise = true;
+            }
+          } else if (movedir_y === 'down') {
+            if (enemy.y < next_wp[1]) enemy.y = enemy.y + enemy._movespeed;
+            if ((enemy.y + this._movespeed) >= next_wp[1]) {
+              change_waypoint_y_wise = true;
+            }
+          } else {
             change_waypoint_y_wise = true;
           }
-        } else if (movedir_y === 'down') {
-          if (enemy.y < next_wp.y) enemy.y = enemy.y + enemy._movespeed;
-          if ((enemy.y + this._movespeed) <= next_wp[1]) {
-            change_waypoint_y_wise = true;
+          if (change_waypoint_x_wise === true && change_waypoint_y_wise === true) {
+            return this._waypoint++;
           }
         } else {
-          change_waypoint_y_wise = true;
-        }
-        if (change_waypoint_x_wise && change_waypoint_y_wise) {
-          return this._waypoint++;
+          return this.destroy();
         }
       }
     });
@@ -136,43 +140,43 @@
       ie_enemy: [0, 0]
     });
     Crafty.scene("main", function() {
-      OpenTower.towers.push(Crafty.e("2D, DOM, firefoxTurret, Turret, WiredHitBox, OpenCollisionable").attr({
+      OpenTower.towers.push(Crafty.e("2D, DOM, firefoxTurret, Turret, OpenCollisionable").attr({
         x: 550,
         y: 210,
         z: 1,
         h: 200,
         w: 200
       }));
-      OpenTower.towers.push(Crafty.e("2D, DOM, firefoxTurret, Turret, WiredHitBox, OpenCollisionable").attr({
+      OpenTower.towers.push(Crafty.e("2D, DOM, firefoxTurret, Turret, OpenCollisionable").attr({
         x: 300,
         y: 210,
         z: 1,
         h: 200,
         w: 200
       }));
-      OpenTower.towers.push(Crafty.e("2D, DOM, firefoxTurret, Turret, WiredHitBox, OpenCollisionable").attr({
+      OpenTower.towers.push(Crafty.e("2D, DOM, firefoxTurret, Turret, OpenCollisionable").attr({
         x: 20,
         y: 210,
         z: 1,
         h: 200,
         w: 200
       }));
-      OpenTower.enemies.push(Crafty.e("2D, DOM, ie_enemy, Enemy, WiredHitBox, OpenCollisionable").attr({
+      OpenTower.enemies.push(Crafty.e("2D, DOM, ie_enemy, Enemy, OpenCollisionable").attr({
         x: -1 * 32,
         y: 0,
         z: 1
       }));
-      OpenTower.enemies.push(Crafty.e("2D, DOM, ie_enemy, Enemy, WiredHitBox, OpenCollisionable").attr({
+      OpenTower.enemies.push(Crafty.e("2D, DOM, ie_enemy, Enemy, OpenCollisionable").attr({
         x: -2 * 32,
         y: 0,
         z: 1
       }));
-      OpenTower.enemies.push(Crafty.e("2D, DOM, ie_enemy, Enemy, WiredHitBox, OpenCollisionable").attr({
+      OpenTower.enemies.push(Crafty.e("2D, DOM, ie_enemy, Enemy, OpenCollisionable").attr({
         x: -4 * 32,
         y: 0,
         z: 1
       }));
-      return OpenTower.enemies.push(Crafty.e("2D, DOM, ie_enemy, Enemy, WiredHitBox, OpenCollisionable").attr({
+      return OpenTower.enemies.push(Crafty.e("2D, DOM, ie_enemy, Enemy, OpenCollisionable").attr({
         x: -10 * 32,
         y: 0,
         z: 1
