@@ -1,6 +1,8 @@
 (function() {
-
   jQuery(document).ready(function() {
+    $('#cr-stage').mousedown(function(e) {
+      return e.preventDefault();
+    });
     window.OpenTower = {
       towers: [],
       enemies: [],
@@ -22,16 +24,20 @@
         }
       },
       detectCollisions: function() {
-        var ei, enemy, i, tower, _len, _len2, _ref, _ref2;
+        var ei, enemy, i, tower, _len, _len2, _ref, _ref2, _results;
         _ref = this.towers;
+        _results = [];
         for (i = 0, _len = _ref.length; i < _len; i++) {
           tower = _ref[i];
           _ref2 = this.enemies;
           for (ei = 0, _len2 = _ref2.length; ei < _len2; ei++) {
             enemy = _ref2[ei];
-            if (this.collided(tower, enemy)) return;
+            if (this.collided(tower, enemy)) {
+              return;
+            }
           }
         }
+        return _results;
       }
     };
     window.Map = {
@@ -44,13 +50,21 @@
     Crafty.background("#75A874");
     window.MapDirections = [
       function(x, y) {
-        if ((x > 777) && (y < 120 && y < 200)) return 'south';
+        if ((x > 777) && (y < 120 && y < 200)) {
+          return 'south';
+        }
       }, function(x, y) {
-        if (x > 776 && (y > 200 && y < 300)) return 'west';
+        if (x > 776 && (y > 200 && y < 300)) {
+          return 'west';
+        }
       }, function(x, y) {
-        if (x < 64 && y > 200) return 'south';
+        if (x < 64 && y > 200) {
+          return 'south';
+        }
       }, function(x, y) {
-        if (x < 64 && y > 300) return 'east';
+        if (x < 64 && y > 300) {
+          return 'east';
+        }
       }
     ];
     Crafty.c('OpenCollisionable', {
@@ -84,12 +98,16 @@
           movedir_x = movedir_x <= 0 ? (movedir_x === 0 ? 'none' : 'left') : 'right';
           change_waypoint_x_wise = false;
           if (movedir_x === 'left') {
-            if (enemy.x > next_wp[0]) enemy.x = enemy.x - enemy._movespeed;
+            if (enemy.x > next_wp[0]) {
+              enemy.x = enemy.x - enemy._movespeed;
+            }
             if ((enemy.x - this._movespeed) <= next_wp[0]) {
               change_waypoint_x_wise = true;
             }
           } else if (movedir_x === 'right') {
-            if (enemy.x < next_wp[0]) enemy.x = enemy.x + enemy._movespeed;
+            if (enemy.x < next_wp[0]) {
+              enemy.x = enemy.x + enemy._movespeed;
+            }
             if ((enemy.x + this._movespeed) >= next_wp[0]) {
               change_waypoint_x_wise = true;
             }
@@ -100,12 +118,16 @@
           movedir_y = movedir_y <= 0 ? (movedir_y === 0 ? 'none' : 'up') : 'down';
           change_waypoint_y_wise = false;
           if (movedir_y === 'up') {
-            if (enemy.y > next_wp[1]) enemy.y = enemy.y - enemy._movespeed;
+            if (enemy.y > next_wp[1]) {
+              enemy.y = enemy.y - enemy._movespeed;
+            }
             if ((enemy.y - this._movespeed) <= next_wp[1]) {
               change_waypoint_y_wise = true;
             }
           } else if (movedir_y === 'down') {
-            if (enemy.y < next_wp[1]) enemy.y = enemy.y + enemy._movespeed;
+            if (enemy.y < next_wp[1]) {
+              enemy.y = enemy.y + enemy._movespeed;
+            }
             if ((enemy.y + this._movespeed) >= next_wp[1]) {
               change_waypoint_y_wise = true;
             }
@@ -122,7 +144,7 @@
     });
     /*
       # Turret!
-    */
+      */
     Crafty.c('Turret', {
       _target: null,
       init: function() {},
@@ -139,7 +161,23 @@
     Crafty.sprite(32, "img/internet_explorer.png", {
       ie_enemy: [0, 0]
     });
+    Crafty.sprite(32, "img/firefox_placable.png", {
+      firefoxPlacable: [0, 0]
+    });
     Crafty.scene("main", function() {
+      var placableTower;
+      placableTower = Crafty.e("2D, DOM, firefoxPlacable, Draggable").attr({
+        x: 100,
+        y: 100,
+        z: 1,
+        h: 32,
+        w: 32
+      }).bind("StartDrag", function(e) {
+        return console.log('start');
+      }).bind("StopDrag", function(e) {
+        this.x = Math.round(this.x / 32) * 32;
+        return this.y = Math.round(this.y / 32) * 32;
+      });
       OpenTower.towers.push(Crafty.e("2D, DOM, firefoxTurret, Turret, OpenCollisionable").attr({
         x: 550,
         y: 210,
@@ -184,5 +222,4 @@
     });
     return Crafty.scene('main');
   });
-
 }).call(this);

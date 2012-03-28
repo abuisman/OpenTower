@@ -1,4 +1,9 @@
 jQuery(document).ready ->
+
+  # Disable clickevents
+  $('#cr-stage').mousedown (e) ->
+    e.preventDefault()
+
   window.OpenTower =
     towers: []
     enemies: []
@@ -147,8 +152,18 @@ jQuery(document).ready ->
   Crafty.sprite 32, "img/internet_explorer.png",
       ie_enemy: [0, 0]
 
+  Crafty.sprite 32, "img/firefox_placable.png",
+      firefoxPlacable: [0, 0]
+
   #the loading screen that will display while our assets load
   Crafty.scene "main", ->
+
+    placableTower = Crafty.e("2D, DOM, firefoxPlacable, Draggable")
+                    .attr({ x: 100, y: 100, z:1, h: 32, w: 32 })
+                    .bind "StartDrag", (e) ->
+                    .bind "StopDrag", (e) ->
+                      this.x = Math.round(this.x / 32) * 32
+                      this.y = Math.round(this.y / 32) * 32
 
     OpenTower.towers.push (Crafty.e("2D, DOM, firefoxTurret, Turret, OpenCollisionable")
                     .attr({ x: 550, y: 210, z:1, h: 200, w: 200 }))
