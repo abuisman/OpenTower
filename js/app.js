@@ -80,11 +80,8 @@
         wp = Map.waypoints[this._waypoint];
         next_wp = Map.waypoints[this._waypoint + 1];
         movedir_x = next_wp[0] - wp[0];
-        movedir_y = next_wp[1] - wp[1];
         movedir_x = movedir_x <= 0 ? (movedir_x === 0 ? 'none' : 'left') : 'right';
-        movedir_y = movedir_y <= 0 ? (movedir_y === 0 ? 'none' : 'up') : 'down';
         change_waypoint_x_wise = false;
-        change_waypoint_y_wise = false;
         if (movedir_x === 'left') {
           if (enemy.x > next_wp[0]) enemy.x = enemy.x - enemy._movespeed;
           if ((enemy.x - this._movespeed) <= next_wp[0]) {
@@ -98,6 +95,9 @@
         } else {
           change_waypoint_x_wise = true;
         }
+        movedir_y = next_wp[1] - wp[1];
+        movedir_y = movedir_y <= 0 ? (movedir_y === 0 ? 'none' : 'up') : 'down';
+        change_waypoint_y_wise = false;
         if (movedir_y === 'up') {
           if (enemy.y > next_wp.y) enemy.y = enemy.y - enemy._movespeed;
           if ((enemy.y - this._movespeed) <= next_wp[1]) {
@@ -111,8 +111,6 @@
         } else {
           change_waypoint_y_wise = true;
         }
-        console.log('x:' + change_waypoint_x_wise + ' to x ' + next_wp[0]);
-        console.log('y:' + change_waypoint_y_wise + ' ti y ' + next_wp[1]);
         if (change_waypoint_x_wise && change_waypoint_y_wise) {
           return this._waypoint++;
         }

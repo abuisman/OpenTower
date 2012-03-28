@@ -80,13 +80,10 @@ jQuery(document).ready ->
 
       # first determine general direction
       movedir_x = next_wp[0] - wp[0]
-      movedir_y = next_wp[1] - wp[1]
       movedir_x = if movedir_x <= 0 then (if movedir_x == 0 then 'none' else 'left') else 'right'
-      movedir_y = if movedir_y <= 0 then (if movedir_y == 0 then 'none' else 'up') else 'down'
       
       # move accordingly on x-axis
       change_waypoint_x_wise = false
-      change_waypoint_y_wise = false
       if movedir_x == 'left'
           if enemy.x > next_wp[0]
             enemy.x = enemy.x - enemy._movespeed
@@ -100,6 +97,14 @@ jQuery(document).ready ->
       else
         change_waypoint_x_wise = true
 
+      #console.log 'x:' +  change_waypoint_x_wise + ' to x ' + next_wp[0]
+      
+      # Checking if moving up or down.
+      movedir_y = next_wp[1] - wp[1]
+      movedir_y = if movedir_y <= 0 then (if movedir_y == 0 then 'none' else 'up') else 'down'
+      
+      # move accordingly on y-axis
+      change_waypoint_y_wise = false
       # move accordingly on y-axis
       if movedir_y == 'up'
           if enemy.y > next_wp.y
@@ -114,8 +119,7 @@ jQuery(document).ready ->
       else
           change_waypoint_y_wise = true
       
-      console.log 'x:' +  change_waypoint_x_wise + ' to x ' + next_wp[0]
-      console.log 'y:' + change_waypoint_y_wise + ' ti y ' + next_wp[1]
+      #console.log 'y:' + change_waypoint_y_wise + ' ti y ' + next_wp[1]
       if (change_waypoint_x_wise and change_waypoint_y_wise)
         @_waypoint++;
   ###
