@@ -79,23 +79,26 @@ jQuery(document).ready ->
       next_wp = Map.waypoints[@_waypoint+1]
 
       # first determine general direction
-      movedir_x = if (next_wp[0] - wp[0]) <= 0 then 'left' else 'right'
-      movedir_y = if (next_wp[1] - wp[1]) <= 0 then 'up' else 'down'
+      movedir_x = next_wp[0] - wp[0]
+      movedir_y = next_wp[1] - wp[1]
+      movedir_x = if movedir_x <= 0 then (if movedir_x == 0 then 'none' else 'left') else 'right'
+      movedir_y = if movedir_y <= 0 then (if movedir_y == 0 then 'none' else 'up') else 'down'
       
       # move accordingly on x-axis
-      change_waypoint_x_wise = if (next_wp[0] - wp[0]) == 0 then true else false;
-      change_waypoint_y_wise = if (next_wp[1] - wp[1]) == 0 then true else false;
-      
+      change_waypoint_x_wise = false
+      change_waypoint_y_wise = false
       if movedir_x == 'left'
           if enemy.x > next_wp[0]
             enemy.x = enemy.x - enemy._movespeed
           if (enemy.x - @_movespeed) <= next_wp[0]
             change_waypoint_x_wise = true
-      else
+      else if movedir_x == 'right'
           if enemy.x < next_wp[0]
             enemy.x = enemy.x + enemy._movespeed
           if (enemy.x + @_movespeed) >= next_wp[0]
             change_waypoint_x_wise = true
+      else
+        change_waypoint_x_wise = true
 
       # move accordingly on y-axis
       if movedir_y == 'up'
@@ -103,11 +106,13 @@ jQuery(document).ready ->
             enemy.y = enemy.y - enemy._movespeed
           if (enemy.y - @_movespeed) <= next_wp[1]
             change_waypoint_y_wise = true
-      else 
+      else if movedir_y == 'down'
           if enemy.y < next_wp.y
             enemy.y = enemy.y + enemy._movespeed
           if (enemy.y + @_movespeed) <= next_wp[1]
             change_waypoint_y_wise = true
+      else
+          change_waypoint_y_wise = true
       
       console.log 'x:' +  change_waypoint_x_wise + ' to x ' + next_wp[0]
       console.log 'y:' + change_waypoint_y_wise + ' ti y ' + next_wp[1]
