@@ -28,16 +28,9 @@ jQuery(document).ready ->
             #console.log ei + ' in range of tower ' + i 
     spawnEnemies: (number = 1, interval = 5) ->
       start = -1
-      for num in [0...number]
-        OpenTower.enemies[num] = Crafty.e("2D, DOM, ie_enemy, Enemy, OpenCollisionable").attr
-          x: (start - (interval * num)) * 32
-          y: 0
-          z:1
-        
-        OpenTower.enemies[num].setLeIndex num
-
+      OpenTower.enemies[num] = Crafty.e("2D, DOM, ie_enemy, Enemy, OpenCollisionable").attr({_index:num, x: (start - (interval * num)) * 32, y: 0, z:1 }) for num in [0...number]
     removeEnemy: (number) ->
-      delete this.enemies[number]
+      this.enemies.splice(number, 1)
 
   window.Map =
     waypoints:
@@ -69,7 +62,6 @@ jQuery(document).ready ->
 
   # Load components
   Crafty.c 'Enemy',
-    _name: 'Dr Evil'
     _movespeed: 6
     _health: 100
     _reward: 1
@@ -77,13 +69,10 @@ jQuery(document).ready ->
     _waypoint: 0
     init: ->
       @bind 'EnterFrame', @doMove
-    setLeIndex: (val)->
-      @_le_index = val
     hit: (damage) ->
-      console.log "I, #{@_name}, index #{@_le_index}, am hit and my health is #{@_health}"
       @_health = @_health - damage
       if @_health <= 0
-        OpenTower.removeEnemy(@_le_index)
+        OpenTower.removeEnemy(@_index)
         this.destroy()
     doMove: ->
       enemy = this
@@ -110,6 +99,8 @@ jQuery(document).ready ->
               change_waypoint_x_wise = true
         else
           change_waypoint_x_wise = true
+
+        #console.log 'x:' +  change_waypoint_x_wise + ' to x ' + next_wp[0]
         
         # Checking if moving up or down.
         movedir_y = next_wp[1] - wp[1]
@@ -143,26 +134,24 @@ jQuery(document).ready ->
   Crafty.c 'Turret',
     _target: null
     _fireTimeout: 0
-    _rate: 10
-    _damage: 20
+    _rate: 5
+    _damage: 100
     init: ->
       # Set the initial area that this turret will target
       #console.log @collision(new Crafty.circle(@x,@y,200))
       #@bind 'EnterFrame', @checkCollision
       this.requires('2D, DOM, firefoxTurret, Draggable, OpenCollisionable');
       this.bind "StopDrag", (e) ->
-                      # snap to grid
                       this.x = Math.round(this.x / 32) * 32
                       this.y = Math.round(this.y / 32) * 32
       this.bind "EnterFrame", ->
-        @_fireTimeout-- unless @_fireTimeout == 0
-        
+        @_fireTimeout-- unless @_fireTimeout == 0;
     checkCollision: ->
       if @_area.containsPoint(enemy.x, enemy.y)
+        console.log('it contains me')
         enemy._movespeed = 0
     fire: (enemy) ->
       if @_fireTimeout == 0
-        console.log "boom"
         enemy.hit @_damage
         @_fireTimeout = @_fireTimeout + @_rate
   
@@ -206,5 +195,5 @@ jQuery(document).ready ->
   Crafty.bind 'EnemyDestroyed', (event) ->
     console.log event
 
-  OpenTower.spawnEnemies(5)
+  OpenTower.spawnEnemies(4)
 
