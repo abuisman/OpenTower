@@ -31,7 +31,7 @@ jQuery(document).ready ->
       for num in [0...number]
         OpenTower.enemies[num] = Crafty.e("2D, DOM, ie_enemy, Enemy, OpenCollisionable").attr
           x: (start - (interval * num)) * 32
-          y: 0
+          y: 32
           z:1
         
         OpenTower.enemies[num].setLeIndex num

@@ -63,7 +63,7 @@
         for (num = _i = 0; 0 <= number ? _i < number : _i > number; num = 0 <= number ? ++_i : --_i) {
           OpenTower.enemies[num] = Crafty.e("2D, DOM, ie_enemy, Enemy, OpenCollisionable").attr({
             x: (start - (interval * num)) * 32,
-            y: 0,
+            y: 32,
             z: 1
           });
           _results.push(OpenTower.enemies[num].setLeIndex(num));
