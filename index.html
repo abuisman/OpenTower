@@ -4,13 +4,28 @@
 <meta charset="utf-8" />
 <title>OpenTower</title>
 
-<!-- Dem scripts -->
+<!-- Dem scripts 
+<script src="js/underscore.js"></script>
+<script src="js/crafty.js"></script>
+<script src="js/appv2.js"></script>
+-->
 <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js'></script>
 <script src='https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js'></script>
-<script src="js/bootstrap.min.js"></script>
-<script src="js/crafty.js"></script>
-<script src="js/app.js"></script>
+<script src="js/lib/bootstrap.min.js"></script>
 
+<script src="js/require.js"></script>
+<script type='text/javascript'>
+  require.config({
+    urlArgs: "bust=" + (new Date()).getTime(), // Cache busting during development.
+    baseUrl: "js",
+    paths: {
+      "libs": "lib",
+      "underscore" : "lib/underscore"
+      },
+    });
+  
+  require(['opentower/appv2']);
+</script>
 <!-- Le styles -->
 <link href="styles/reset.css" rel="stylesheet">
 <link href="styles/bootstrap.css" rel="stylesheet">

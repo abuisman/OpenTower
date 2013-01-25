@@ -6,7 +6,7 @@
 * Dual licensed under the MIT or GPL licenses.
 */
 
-
+define([], function(){
 (function (window, initComponents, undefined) {
     /**@
     * #Crafty
@@ -997,7 +997,7 @@
         * @see Crafty.e
         */
         addEntityFactory: function(name, callback) {
-            this.entityFactories[name] = callback;
+          this.entityFactories[name] = callback;
         },
 
         /**@
@@ -1616,6 +1616,7 @@ function(Crafty, window, document) {
 	*/
 	HashMap.key = function (obj) {
 		if (obj.hasOwnProperty('mbr')) {
+      //console.log(obj);
 			obj = obj.mbr();
 		}
 		var x1 = Math.floor(obj._x / cellsize),
@@ -10429,6 +10430,8 @@ Crafty.c("Delay", {
 	}
 });
 
-
+return Crafty;
 });
 
+
+});
